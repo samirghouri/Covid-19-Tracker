@@ -4,6 +4,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Application View
+Link:https://samirghouri.github.io/Covid-19-Tracker/
+
 ![alt text](https://github.com/samirghouri/Covid-19-Tracker/blob/master/src/screenshot.png?raw=true)
 
 ## Available Scripts

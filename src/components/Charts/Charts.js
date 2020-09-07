@@ -1,13 +1,9 @@
-//importing the react and react hooks
 import React, { useState, useEffect } from "react";
-//importing the api function from the api folder
 import { fetchDailyData } from "../../api";
-// Getting the line and bar componenets from the chartjs files
 import { Line, Bar } from "react-chartjs-2";
-// importing styles from the modules
-import styles from "Charts.modules.css";
+import styles from "./Charts.module.css";
 
-const Charts = () => {
+const Charts = ({ data, country }) => {
   const [dailyData, setDailyData] = useState({});
 
   useEffect(() => {
@@ -16,17 +12,62 @@ const Charts = () => {
     };
     fetchAPI();
   }, []);
-  console.log(dailyData);
-
-  const LineChart = dailyData[0] ? (
+  const LineChart = dailyData.length ? (
     <Line
       data={{
-        labels: "",
-        datasets: [{}, {}],
+        labels: dailyData.map(({ date }) => date),
+        datasets: [
+          {
+            data: dailyData.map(({ confirmed }) => confirmed),
+            label: "Infected",
+            borderColor: "#3333ff",
+            fill: true,
+          },
+          {
+            data: dailyData.map(({ deaths }) => deaths),
+            label: "Deaths",
+            borderColor: "red",
+            fill: true,
+          },
+        ],
       }}
     />
   ) : null;
-  return <div>Charts</div>;
+
+  let confirmed = "";
+  let recovered = "";
+  let deaths = "";
+  if (data.confirmed) {
+    confirmed = data.confirmed.value;
+    recovered = data.recovered.value;
+    deaths = data.deaths.value;
+  }
+  const BarChart = confirmed ? (
+    <Bar
+      data={{
+        labels: ["Infected", "Recovered", "Deaths"],
+        datasets: [
+          {
+            label: "People",
+            backgroundColor: [
+              "rgb(0, 0, 255)",
+              "rgb(60, 179, 113)",
+              "rgb(255, 0, 0)",
+            ],
+            data: [confirmed, recovered, deaths],
+          },
+        ],
+      }}
+      options={{
+        legend: { display: false },
+        title: { display: true, text: `Current state in ${country}` },
+      }}
+    />
+  ) : null;
+
+  return (
+    <div className={styles.container}>{country ? BarChart : LineChart}</div>
+  );
 };
 
 export default Charts;
